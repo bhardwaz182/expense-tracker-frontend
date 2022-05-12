@@ -1,0 +1,32 @@
+.tab{
+    padding: 5px 5px 0;
+}
+
+.form-elements{
+    width: 100%;
+    border-radius: 5px;
+    margin: 5px 0;
+    border: 1px solid black;
+}
+
+.distribution-elements{
+    width: 5rem;
+    border-radius: 5px;
+    margin: 5px 0;
+    border: 1px solid black;
+}
+
+.accordian{
+    margin: 5px 0;
+}
+
+.card{
+    width: 18rem;
+    margin: 5px;
+    display: inline-block;
+    margin-left: 0.5rem;
+}
+
+.card-form-button{
+    margin: 5px 0;
+}
