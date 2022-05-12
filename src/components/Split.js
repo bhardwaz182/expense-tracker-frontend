@@ -162,7 +162,7 @@ const Split = ({ data }) => {
               <td>
                 {members.map((item1) => (
                   <div>
-                    <div style={{ display: "inline-block", width: "6rem" }}>
+                    <div style={{ display: "inline-block", width: "5rem" }}>
                       {item1}
                     </div>{" "}
                     :{" "}

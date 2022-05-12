@@ -61,7 +61,7 @@ const Page = () => {
     ],
   });
   const [editData, setEditData] = useState([]);
-
+  const [formError, setFormError] = useState("");
 
   const formChange = (event, index) => {
     const newArr = { ...includedData };
@@ -80,7 +80,15 @@ const Page = () => {
     } else {
       event.target.value === "on"
         ? (newArr.included[index]["value"] = event.target.checked)
-        : (newArr.included[index].cost = event.target.value);
+        : (newArr.included[index].cost = event.target.value ? parseFloat(event.target.value):0);
+        let sum=0;
+        newArr.included.map((element)=>{
+            if(element.value){
+                sum+=parseFloat(element.cost);
+            }
+            return 0;
+        })
+        newArr.cost = sum;
     }
     setIncludedData(newArr);
   };
@@ -102,7 +110,16 @@ const Page = () => {
     } else {
       event.target.value === "on"
         ? (newArr.included[index]["value"] = event.target.checked)
-        : (newArr.included[index].cost = event.target.value);
+        : (newArr.included[index].cost = event.target.value ? parseFloat(event.target.value):0);
+        
+        let sum=0;
+        newArr.included.map((element)=>{
+            if(element.value){
+                sum+=parseFloat(element.cost);
+            }
+            return 0;
+        })
+        newArr.cost = sum;
     }
     setEditData(newArr);
   };
@@ -119,23 +136,34 @@ const Page = () => {
 
   const afterEdit = (id) => {
     const newArr = { ...editData };
-    delete newArr._id;
+    const newIncluded = [];
+    newArr.included.map(item=>{
+        if(item.value){
+            newIncluded.push(item);
+        }
+        return 0;
+    })
+    newArr.included = newIncluded;
     const newDataArr = [];
     data.map((item) => {
       if (item._id === editData._id) {
-        newDataArr.push({ ...editData });
+        newDataArr.push({ ...newArr });
       } else {
         newDataArr.push(item);
       }
       return 0;
     });
     setData(newDataArr);
+    delete newArr._id;
     axios
       .patch(`${process.env.REACT_APP_BASE_URL}/workshops/update/${id}`, newArr)
-      .then((res) => res.data);
-    setEditData([]);
+      .then(res =>{
+        if(res.status===200){
+            setEditData([]);
+        }
+      });
   };
-  
+
   const stopEdit = () => {
     setEditData([]);
   };
@@ -149,7 +177,7 @@ const Page = () => {
     axios
       .delete(`${process.env.REACT_APP_BASE_URL}/workshops/delete/${id}`)
       .then((res) => {
-        if (res.status) {
+        if (res.status===200) {
           const newData = [];
           data.map((item) => {
             if (item._id !== id) {
@@ -172,13 +200,21 @@ const Page = () => {
       return 0;
     });
     newObj.included = newArr;
-    axios
-      .post(`${process.env.REACT_APP_BASE_URL}/workshops/post`, newObj)
-      .then((res) => {
-        setData([...data, res.data]);
-      });
+    if(newObj.what){
+        axios
+          .post(`${process.env.REACT_APP_BASE_URL}/workshops/post`, newObj)
+          .then((res) => {
+              if(res.status===200){
+                  setData([...data, res.data]);
+              }
+          });
+        setFormError("");
+    }else{
+        setFormError("Please Fill what field");
+    }
   };
 
+  console.log("formerror",formError);
   return (
     <>
       <Tabs defaultActiveKey="home" className="tab">
@@ -187,6 +223,7 @@ const Page = () => {
             includedData={includedData}
             formChange={formChange}
             onSubmit={onSubmit}
+            formerror={formError}
           />
           <Container>
             {data &&
@@ -199,6 +236,7 @@ const Page = () => {
                         afterEdit={afterEdit}
                         stopEdit={stopEdit}
                         onDelete={onDelete}
+                        formerror={formError}
                     />
                     </Card>
                 ) : (

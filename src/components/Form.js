@@ -5,10 +5,12 @@ const Form = ({
   includedData,
   formChange,
   onSubmit,
+  formerror,
   afterEdit = "",
   stopEdit = () => {},
   onDelete = (id) => {},
 }) => {
+    console.log("formError",formerror);
   return (
     <Container>
       <Row>
@@ -23,6 +25,9 @@ const Form = ({
             value={includedData.what}
             onChange={(event) => formChange(event, "what")}
             className="form-elements"
+            autoComplete="off"
+            required
+            style={{borderColor:`${formerror ? "red" : "black"}`}}
           />
         </Col>
       </Row>
@@ -63,7 +68,7 @@ const Form = ({
       </Row>
       <Accordion className="accordian">
         <Accordion.Item eventKey="0">
-          <Accordion.Header>Who are included</Accordion.Header>
+          <Accordion.Header>Who are Included</Accordion.Header>
           <Accordion.Body>
             {includedData.included.map((item, index) => (
               <Row key={index}>

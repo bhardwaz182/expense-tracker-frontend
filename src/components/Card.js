@@ -38,10 +38,10 @@ const DataCard = ({_id,what,who,when,cost,included, onEdit}) =>{
                             <Accordion.Body>
                                 <Container>
                                     {
-                                        included.map(item=>(<Row>
+                                        included.map(item=>(item.value?<Row>
                                             <Col>{item.name}</Col>
                                             <Col>{item.cost}</Col>
-                                        </Row>))
+                                        </Row>:''))
                                     }
                                 </Container>
                             </Accordion.Body>
